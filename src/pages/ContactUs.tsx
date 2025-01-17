@@ -1,7 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import emailjs from "emailjs-com";
+import { ToastContainer, toast } from "react-toastify"; // Importing Toastify and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const ContactUs: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false); // To handle loading state
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const { name, email, subject, message } = formData;
+    if (!name || !email || !subject || !message) {
+      toast.error("All fields are required!"); // Error message toast
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.error("Please enter a valid email address!"); // Error message toast
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsLoading(true); // Start loading
+
+    const form = event.target as HTMLFormElement;
+
+    emailjs
+      .sendForm(
+        "service_cpnpfci", // Hardcoded Service ID
+        "template_5bejvmd", // Hardcoded Template ID
+        form,
+        "gCv1qx4g2YjUZpvXg" // Hardcoded User ID
+      )
+      .then(
+        (result) => {
+          console.log(result.text); // Success message
+          setIsLoading(false); // Stop loading
+          toast.success("Your message has been sent successfully!"); // Success toast
+          setFormData({ name: "", email: "", subject: "", message: "" }); // Clear form data
+        },
+        (error) => {
+          console.log(error.text); // Error message
+          setIsLoading(false); // Stop loading
+          toast.error("Something went wrong, please try again!"); // Error toast
+        }
+      );
+  };
+
   return (
     <div className="bg-gray-100 py-16 px-4 sm:px-6 lg:px-16">
       {/* Page Header */}
@@ -24,42 +87,39 @@ const ContactUs: React.FC = () => {
         </motion.p>
       </section>
 
-      {/* Contact Information */}
-      <section className="flex flex-col sm:flex-row sm:justify-around sm:items-start mb-12 text-gray-700 gap-6">
-        <motion.div
-          className="flex flex-col items-center text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
+      {/* Contact Information Section */}
+      <section className="text-center mb-12">
+        <motion.h2
+          className="text-2xl sm:text-3xl font-bold text-[#003B95]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
-          <h2 className="text-base sm:text-lg font-semibold mb-2">Email</h2>
-          <p className="text-sm sm:text-base">support@roomsync.com</p>
-        </motion.div>
+          Contact Information
+        </motion.h2>
         <motion.div
-          className="flex flex-col items-center text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
+          className="mt-6 space-y-4 text-gray-700"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.3 }}
         >
-          <h2 className="text-base sm:text-lg font-semibold mb-2">Phone</h2>
-          <p className="text-sm sm:text-base">+1 (123) 456-7890</p>
-        </motion.div>
-        <motion.div
-          className="flex flex-col items-center text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-        >
-          <h2 className="text-base sm:text-lg font-semibold mb-2">
-            Office Address
-          </h2>
-          <p className="text-sm sm:text-base">
-            123 Business Street, Suite 456, Tech City
+          <p>
+            Email:{" "}
+            <a href="mailto:info@example.com" className="text-blue-600">
+              support@roomsync.com
+            </a>
+          </p>
+          <p>
+            Phone: <span className="text-blue-600">+880 1865701039</span>
+          </p>
+          <p>
+            Address:{" "}
+            <span className="text-blue-600">Uttara, Dhaka, Bangladesh</span>
           </p>
         </motion.div>
       </section>
 
-      {/* Contact Form */}
+      {/* Contact Form Section */}
       <section className="max-w-full sm:max-w-2xl lg:max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-md">
         <motion.h2
           className="text-xl sm:text-2xl font-bold text-center text-[#003B95] mb-6"
@@ -69,7 +129,7 @@ const ContactUs: React.FC = () => {
         >
           Get in Touch
         </motion.h2>
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Field */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -79,6 +139,9 @@ const ContactUs: React.FC = () => {
             <label className="block font-medium text-gray-700 mb-2">Name</label>
             <input
               type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
               placeholder="Your Name"
               className="w-full px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003B95]"
             />
@@ -95,6 +158,9 @@ const ContactUs: React.FC = () => {
             </label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="Your Email"
               className="w-full px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003B95]"
             />
@@ -111,6 +177,9 @@ const ContactUs: React.FC = () => {
             </label>
             <input
               type="text"
+              name="subject"
+              value={formData.subject}
+              onChange={handleInputChange}
               placeholder="Subject"
               className="w-full px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003B95]"
             />
@@ -126,6 +195,9 @@ const ContactUs: React.FC = () => {
               Message
             </label>
             <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
               placeholder="Your Message"
               className="w-full px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003B95]"
               rows={5}
@@ -142,12 +214,26 @@ const ContactUs: React.FC = () => {
             <button
               type="submit"
               className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-[#003B95] text-white font-semibold rounded-md shadow-md hover:bg-[#002766] transition-colors"
+              disabled={isLoading} // Disable button during loading
             >
-              Send Message
+              {isLoading ? "Sending..." : "Send Message"}
             </button>
           </motion.div>
         </form>
       </section>
+
+      {/* ToastContainer for Toastify */}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

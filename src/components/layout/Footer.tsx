@@ -22,10 +22,10 @@ const Footer: React.FC = () => {
             <p className="text-lg">
               Phone:{" "}
               <a href="tel:+1234567890" className="hover:text-[#F1F1F1]">
-                +1 (234) 567-890
+                +880 1865701039
               </a>
             </p>
-            <p className="text-lg">Address: 123 Main St, City, Country</p>
+            <p className="text-lg">Address: Uttara, Dhaka, Bangladesh</p>
           </div>
 
           {/* Social Media Links */}
