@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const Header: React.FC = () => {
   return (
@@ -19,12 +20,14 @@ const Header: React.FC = () => {
           <p className="mb-5 text-lg text-white text-shadow-md">
             Efficient, hassle-free room booking for all your meeting needs.
           </p>
-          <a
-            href="/meeting-rooms"
-            className="btn bg-[#005FA8] text-white px-6 py-3 rounded-lg shadow-lg hover:bg-[#004C8C] hover:shadow-xl transition-all duration-300"
+          <motion.button
+            className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => (window.location.href = "/")}
           >
             Book Now
-          </a>
+          </motion.button>
         </div>
       </div>
     </div>
