@@ -1,11 +1,65 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
+import { useLoginMutation } from "../redux/api/auth/authApi";
+import { setEmail, setPassword } from "../redux/features/SignUpSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { setLoggedIn } from "../redux/features/LoginSlice";
+import { setToken, setUser } from "../redux/features/UserSlice";
+import { jwtDecode } from "jwt-decode"; // Import jwtDecode function
 
-const Login: React.FC = () => {
+const LoginForm: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { email, password } = useAppSelector((state: RootState) => state.login);
+  const navigate = useNavigate();
+
+  const [login] = useLoginMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const user = await login({ email, password }).unwrap();
+      toast.success("Login successful!"); // Success toast
+
+      // Ensure that user.token is available
+      if (user.token) {
+        try {
+          // Decode the JWT token
+          const decoded = jwtDecode(user.token);
+          console.log("Decoded Token: ", decoded);
+
+          // Dispatch token and user info to Redux
+          dispatch(setToken(user.token));
+          dispatch(setUser(decoded));
+          console.log("user", user);
+
+          setTimeout(() => {
+            dispatch(setLoggedIn(true));
+            navigate("/"); // Redirect to home after successful login
+          }, 2000);
+        } catch (decodeError) {
+          console.error("Error decoding the token:", decodeError);
+          toast.error("Invalid token. Please try again.");
+        }
+      } else {
+        toast.error("No token received. Please try again.");
+      }
+    } catch (err: any) {
+      toast.error("Login failed. Please check your password."); // Error toast
+    }
+  };
+
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <form>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md"
+      >
+        <h2 className="text-2xl font-bold mb-4">Login</h2>
+
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1" htmlFor="email">
             Email
@@ -13,6 +67,8 @@ const Login: React.FC = () => {
           <input
             id="email"
             type="email"
+            value={email}
+            onChange={(e) => dispatch(setEmail(e.target.value))} // Dispatching the action
             placeholder="Enter your email"
             className="w-full p-2 border rounded"
           />
@@ -25,30 +81,42 @@ const Login: React.FC = () => {
           <input
             id="password"
             type="password"
+            value={password}
+            onChange={(e) => dispatch(setPassword(e.target.value))} // Dispatching the action
             placeholder="Enter your password"
             className="w-full p-2 border rounded"
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
+        <button className="block w-full text-center bg-[#005FA8] text-white py-3 px-8 rounded-lg shadow-md hover:bg-[#002766] transition-colors transform hover:scale-110 active:scale-95">
           Login
         </button>
+
+        <div className="mt-4 text-center">
+          <p>
+            Don't have an account?{" "}
+            <Link to="/sign-up" className="text-[#005FA8] hover:underline">
+              Go to Sign Up
+            </Link>
+          </p>
+        </div>
       </form>
 
-      <p className="text-sm text-gray-600 mt-4">
-        New here?{" "}
-        <Link
-          to="/sign-up"
-          className="text-blue-500 hover:underline font-medium"
-        >
-          Go to Signup Page
-        </Link>
-      </p>
-    </div>
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </>
   );
 };
 
-export default Login;
+export default LoginForm;

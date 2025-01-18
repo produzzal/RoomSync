@@ -11,15 +11,16 @@ import {
 import { useSignUpMutation } from "../redux/api/auth/authApi";
 import { toast, ToastContainer } from "react-toastify"; // Correct import here
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { name, email, password, phone, role, address } = useAppSelector(
     (state: RootState) => state.signup
   );
 
-  const [signup, { error }] = useSignUpMutation();
-
+  const [signup, { data, error }] = useSignUpMutation();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -41,6 +42,9 @@ const SignUp: React.FC = () => {
 
       if (user?.data) {
         toast.success("Sign-up successful!");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (err) {
       toast.error("Sign-up failed. Please try again.");
