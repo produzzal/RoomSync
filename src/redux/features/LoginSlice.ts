@@ -19,15 +19,9 @@ const loginSlice = createSlice({
     setLoggedIn(state, action: PayloadAction<boolean>) {
       state.isLoggedIn = action.payload; // Set the logged-in status
     },
-    logout(state) {
-      state.isLoggedIn = false;
-      state.email = "";
-      state.password = "";
-    },
   },
 });
 
-export const { setEmail, setPassword, setLoggedIn, logout } =
-  loginSlice.actions;
+export const { setEmail, setPassword, setLoggedIn } = loginSlice.actions;
 
 export default loginSlice.reducer;

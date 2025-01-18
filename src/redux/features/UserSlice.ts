@@ -21,7 +21,7 @@ const userSlice = createSlice({
       state.user = action.payload;
       localStorage.setItem("user", JSON.stringify(action.payload)); // Save user to localStorage
     },
-    clearUser: (state) => {
+    logout: (state) => {
       state.token = "";
       state.user = {
         _id: "",
@@ -36,5 +36,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setToken, setUser, clearUser } = userSlice.actions;
+export const { setToken, setUser, logout } = userSlice.actions;
 export default userSlice.reducer;

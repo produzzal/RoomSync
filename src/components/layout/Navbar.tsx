@@ -1,19 +1,28 @@
 import { useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/features/UserSlice";
 
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const { token, user } = useAppSelector((state: RootState) => state.user);
   const isAuthenticated = !!token;
   const isAdmin = user?.role === "admin";
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   // Toggle dropdown menu
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   // Close dropdown
   const closeDropdown = () => setIsDropdownOpen(false);
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <div className="navbar bg-[#003B95] text-white px-4">
@@ -109,7 +118,7 @@ const Navbar: React.FC = () => {
                       <Link to="/admin-dashboard">Dashboard</Link>
                     </li>
                     <li>
-                      <a href="/logout">Logout</a>
+                      <a onClick={handleLogout}>Logout</a>
                     </li>
                   </>
                 ) : (
@@ -118,7 +127,7 @@ const Navbar: React.FC = () => {
                       <Link to="/my-bookings">My Bookings</Link>
                     </li>
                     <li>
-                      <a href="/logout">Logout</a>
+                      <a onClick={handleLogout}>Logout</a>
                     </li>
                   </>
                 )}
