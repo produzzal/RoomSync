@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
             )}
           </div>
         ) : (
-          <a href="/login-register" className="btn">
+          <a href="/login" className="btn">
             Login
           </a>
         )}
