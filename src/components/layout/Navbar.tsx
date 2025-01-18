@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+import { RootState } from "../../redux/store";
+import { Link } from "react-router-dom";
 
 const Navbar: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const isAdmin = true; // Example: Adjust this based on actual admin logic
-
-  // Check authentication on mount
-  useEffect(() => {
-    const user = localStorage.getItem("user"); // Replace with your auth check logic
-    if (user) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  const { token, user } = useAppSelector((state: RootState) => state.user);
+  const isAuthenticated = !!token;
+  const isAdmin = user?.role === "admin";
 
   // Toggle dropdown menu
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
@@ -47,7 +43,7 @@ const Navbar: React.FC = () => {
           </label>
           {isDropdownOpen && (
             <ul
-              className="menu menu-sm dropdown-content mt-3 z-[1] bg-base-100 rounded-box w-52 p-2 shadow text-black"
+              className="menu menu-sm dropdown-content mt-3 z-[9999] bg-base-100 rounded-box w-52 p-2 shadow text-black sm:w-56 sm:max-w-[250px] md:w-[320px] lg:w-auto whitespace-normal"
               onClick={closeDropdown}
             >
               <li>
@@ -104,13 +100,13 @@ const Navbar: React.FC = () => {
             {isDropdownOpen && (
               <ul
                 tabIndex={0}
-                className="menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black"
+                className="menu dropdown-content bg-base-100 rounded-box z-[9999] mt-3 w-52 p-2 shadow text-black sm:w-56 sm:max-w-[250px] md:w-[320px] lg:w-auto whitespace-normal"
                 onClick={closeDropdown}
               >
                 {isAdmin ? (
                   <>
                     <li>
-                      <a href="/dashboard">Dashboard</a>
+                      <Link to="/admin-dashboard">Dashboard</Link>
                     </li>
                     <li>
                       <a href="/logout">Logout</a>
@@ -119,7 +115,7 @@ const Navbar: React.FC = () => {
                 ) : (
                   <>
                     <li>
-                      <a href="/my-bookings">My Bookings</a>
+                      <Link to="/my-bookings">My Bookings</Link>
                     </li>
                     <li>
                       <a href="/logout">Logout</a>
@@ -130,9 +126,9 @@ const Navbar: React.FC = () => {
             )}
           </div>
         ) : (
-          <a href="/login" className="btn">
+          <Link to="/login" className="btn">
             Login
-          </a>
+          </Link>
         )}
       </div>
     </div>

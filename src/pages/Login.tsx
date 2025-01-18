@@ -1,4 +1,3 @@
-import React from "react";
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -29,12 +28,14 @@ const LoginForm: React.FC = () => {
         try {
           // Decode the JWT token
           const decoded = jwtDecode(user.token);
-          console.log("Decoded Token: ", decoded);
 
           // Dispatch token and user info to Redux
           dispatch(setToken(user.token));
           dispatch(setUser(decoded));
-          console.log("user", user);
+
+          // Store the token and user info in localStorage
+          localStorage.setItem("token", user.token);
+          localStorage.setItem("user", JSON.stringify(decoded));
 
           setTimeout(() => {
             dispatch(setLoggedIn(true));
@@ -54,53 +55,58 @@ const LoginForm: React.FC = () => {
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md"
-      >
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-md w-full bg-white p-6 rounded-lg shadow-md"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => dispatch(setEmail(e.target.value))} // Dispatching the action
-            placeholder="Enter your email"
-            className="w-full p-2 border rounded"
-          />
-        </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => dispatch(setEmail(e.target.value))} // Dispatching the action
+              placeholder="Enter your email"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#005FA8]"
+            />
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => dispatch(setPassword(e.target.value))} // Dispatching the action
-            placeholder="Enter your password"
-            className="w-full p-2 border rounded"
-          />
-        </div>
+          <div className="mb-4">
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => dispatch(setPassword(e.target.value))} // Dispatching the action
+              placeholder="Enter your password"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#005FA8]"
+            />
+          </div>
 
-        <button className="block w-full text-center bg-[#005FA8] text-white py-3 px-8 rounded-lg shadow-md hover:bg-[#002766] transition-colors transform hover:scale-110 active:scale-95">
-          Login
-        </button>
+          <button className="block w-full text-center bg-[#005FA8] text-white py-3 px-8 rounded-lg shadow-md hover:bg-[#002766] transition-colors transform hover:scale-110 active:scale-95">
+            Login
+          </button>
 
-        <div className="mt-4 text-center">
-          <p>
-            Don't have an account?{" "}
-            <Link to="/sign-up" className="text-[#005FA8] hover:underline">
-              Go to Sign Up
-            </Link>
-          </p>
-        </div>
-      </form>
+          <div className="mt-4 text-center">
+            <p>
+              Don't have an account?{" "}
+              <Link to="/sign-up" className="text-[#005FA8] hover:underline">
+                Go to Sign Up
+              </Link>
+            </p>
+          </div>
+        </form>
+      </div>
 
       {/* Toast Container */}
       <ToastContainer
