@@ -6,6 +6,11 @@ import ContactUs from "../pages/ContactUs";
 import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
+import AdminRoute from "../pages/admin/AdminRoute";
+import AddRoom from "../pages/Room/AddRoom";
+import UnAuthorized from "../pages/UnAuthorized";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import UpdateRoom from "../pages/Room/UpdateRoom";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +40,34 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUp />,
+      },
+      {
+        path: "/unauthorized",
+        element: <UnAuthorized />,
+      },
+      {
+        path: "admin/add-room",
+        element: (
+          <AdminRoute>
+            <AddRoom />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/update-room/:roomId",
+        element: (
+          <AdminRoute>
+            <UpdateRoom />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/dashboard",
+        element: (
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        ),
       },
     ],
   },

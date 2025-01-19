@@ -3,6 +3,7 @@ import { baseApi } from "./api/baseApi";
 import signUpReducer from "./features/SignUpSlice";
 import loginReducer from "./features/SignUpSlice";
 import userReducer from "./features/UserSlice";
+import roomReducer from "./features/RoomSlice";
 import {
   FLUSH,
   PAUSE,
@@ -27,6 +28,7 @@ export const store = configureStore({
     signup: signUpReducer,
     login: loginReducer,
     user: persistedUserReducer,
+    room: roomReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

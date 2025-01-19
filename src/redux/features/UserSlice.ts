@@ -6,7 +6,7 @@ const initialState = {
   user: JSON.parse(
     localStorage.getItem("user") ||
       '{"_id": "", "email": "", "role": "", "exp": "", "iat": ""}'
-  ),
+  ), // Parse the user object correctly from localStorage
 };
 
 const userSlice = createSlice({
@@ -17,7 +17,8 @@ const userSlice = createSlice({
       state.token = action.payload;
       localStorage.setItem("token", action.payload); // Save token to localStorage
     },
-    setUser: (state, action: PayloadAction<any>) => {
+    setUser: (state, action: PayloadAction<object>) => {
+      // Expect an object for the user
       state.user = action.payload;
       localStorage.setItem("user", JSON.stringify(action.payload)); // Save user to localStorage
     },

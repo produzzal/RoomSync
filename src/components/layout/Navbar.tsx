@@ -103,7 +103,10 @@ const Navbar: React.FC = () => {
               onClick={toggleDropdown}
             >
               <div className="w-10 rounded-full">
-                <img src="https://via.placeholder.com/150" alt="User Avatar" />
+                <img
+                  src="https://i.ibb.co.com/dDV3S33/download.png"
+                  alt="User Avatar"
+                />
               </div>
             </label>
             {isDropdownOpen && (
@@ -115,7 +118,7 @@ const Navbar: React.FC = () => {
                 {isAdmin ? (
                   <>
                     <li>
-                      <Link to="/admin-dashboard">Dashboard</Link>
+                      <Link to="/admin/dashboard">Dashboard</Link>
                     </li>
                     <li>
                       <a onClick={handleLogout}>Logout</a>
