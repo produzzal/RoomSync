@@ -3,78 +3,63 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 interface RoomCardProps {
-  id: number;
-  imageUrl: string;
+  image: string;
   name: string;
-  capacity: string;
-  pricePerSlot: string;
+  capacity: number;
+  pricePerSlot: number;
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({
-  id,
-  imageUrl,
+  image,
   name,
   capacity,
   pricePerSlot,
 }) => {
   return (
     <motion.div
-      key={id}
-      className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6 }}
-      whileHover={{ scale: 1.05 }} // Hover scale effect
-      viewport={{ once: true }} // Triggers once when it enters view
+      className="bg-white border rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:scale-102"
+      whileHover={{ scale: 1.02 }} // Slightly zoom in the card on hover
+      whileTap={{ scale: 0.98 }} // Slightly shrink the card on click
+      transition={{ duration: 0.3 }} // Smooth transition for scaling
     >
-      <img
-        src={imageUrl}
-        alt={name}
-        className="w-full h-48 object-cover rounded-md"
-      />
-      <div className="mt-4">
-        <motion.h3
-          className="text-lg sm:text-xl font-semibold text-[#003B95]"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          {name}
-        </motion.h3>
-        <motion.p
-          className="text-gray-600 mt-2"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {capacity}
-        </motion.p>
-        <motion.p
-          className="text-gray-800 font-semibold mt-2"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          {pricePerSlot}
-        </motion.p>
-      </div>
+      {/* Image */}
       <motion.div
-        className="mt-4 flex justify-between items-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.8 }}
-        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-t-lg"
+        whileHover={{ scale: 1.05 }} // Slightly zoom in the image on hover
+        transition={{ duration: 0.2 }} // Faster transition for the image zoom
       >
-        <Link
-          to={`/rooms/${id}`} // Link to the Room Details page
-          className="text-sm sm:text-base text-[#003B95] font-medium hover:underline"
+        <img
+          src={image}
+          alt={name}
+          className="object-cover w-full h-60 md:h-48 lg:h-64 transition-transform duration-300" // Different heights for various screens
+        />
+      </motion.div>
+
+      {/* Content */}
+      <div className="p-4 md:p-6 space-y-4">
+        {/* Room Name */}
+        <h2 className="text-xl md:text-2xl font-bold text-gray-700">{name}</h2>
+
+        {/* Capacity */}
+        <p className="text-base md:text-lg text-gray-700 font-medium">
+          Capacity: {capacity}
+        </p>
+
+        {/* Price Per Slot */}
+        <p className="text-lg md:text-xl font-semibold text-gray-700">
+          PricePerSlot: ${pricePerSlot}
+        </p>
+
+        {/* See Details Button */}
+        <motion.button
+          className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => (window.location.href = "")}
         >
           See Details
-        </Link>
-      </motion.div>
+        </motion.button>
+      </div>
     </motion.div>
   );
 };

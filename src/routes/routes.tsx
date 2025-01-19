@@ -11,6 +11,7 @@ import AddRoom from "../pages/Room/AddRoom";
 import UnAuthorized from "../pages/UnAuthorized";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import UpdateRoom from "../pages/Room/UpdateRoom";
+import MeetingRoom from "../pages/MeetingRoom";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUp />,
+      },
+      {
+        path: "meeting-rooms",
+        element: <MeetingRoom />,
       },
       {
         path: "/unauthorized",

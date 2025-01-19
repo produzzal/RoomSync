@@ -41,9 +41,36 @@ const roomSlice = createSlice({
     setRoomData: (state, action: PayloadAction<Room>) => {
       state.roomData = action.payload; // Update roomData with fetched room
     },
+    searchQuery: (state, action: PayloadAction<string>) => {
+      state.query = action.payload; // Update the search query
+    },
+    setCapacityFilter(state, action: PayloadAction<string>) {
+      state.capacityFilter = action.payload;
+    },
+    setPriceFilter(state, action: PayloadAction<string>) {
+      state.priceFilter = action.payload;
+    },
+    setSortOrder(state, action: PayloadAction<string>) {
+      state.sortOrder = action.payload;
+    },
+    clearFilters(state) {
+      state.query = "";
+      state.capacityFilter = "";
+      state.priceFilter = "";
+      state.sortOrder = "ascending";
+    },
   },
 });
 
-export const { createRoom, updateRoom, deleteRoom, setRoomData } =
-  roomSlice.actions;
+export const {
+  createRoom,
+  updateRoom,
+  deleteRoom,
+  setRoomData,
+  searchQuery,
+  setCapacityFilter,
+  setPriceFilter,
+  setSortOrder,
+  clearFilters,
+} = roomSlice.actions;
 export default roomSlice.reducer;

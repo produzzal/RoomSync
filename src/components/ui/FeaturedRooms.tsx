@@ -1,66 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import RoomCard from "./RoomCard"; // Import RoomCard component
+import { useGetRoomsQuery } from "../../redux/api/roomApi";
 
 const FeaturedRooms: React.FC = () => {
-  const rooms = [
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Conference Room A",
-      capacity: "12 people",
-      pricePerSlot: "$100/hour",
-    },
-    {
-      id: 2,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Meeting Room B",
-      capacity: "8 people",
-      pricePerSlot: "$75/hour",
-    },
-    {
-      id: 3,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Board Room C",
-      capacity: "15 people",
-      pricePerSlot: "$120/hour",
-    },
-    {
-      id: 4,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Training Room D",
-      capacity: "25 people",
-      pricePerSlot: "$150/hour",
-    },
-    {
-      id: 5,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Strategy Room E",
-      capacity: "10 people",
-      pricePerSlot: "$80/hour",
-    },
-    {
-      id: 6,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Small Meeting Room F",
-      capacity: "5 people",
-      pricePerSlot: "$50/hour",
-    },
-    {
-      id: 7,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Collaboration Room G",
-      capacity: "20 people",
-      pricePerSlot: "$110/hour",
-    },
-    {
-      id: 8,
-      imageUrl: "https://via.placeholder.com/300",
-      name: "Executive Room H",
-      capacity: "6 people",
-      pricePerSlot: "$90/hour",
-    },
-  ];
+  const { data: response } = useGetRoomsQuery();
+  const rooms = response?.data || [];
 
   const displayedRooms = rooms.slice(0, 3); // Slice the array to show only the first 6 rooms
 
@@ -108,7 +53,7 @@ const FeaturedRooms: React.FC = () => {
           className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => (window.location.href = "/")}
+          onClick={() => (window.location.href = "/meeting-rooms")}
         >
           See More Rooms
         </motion.button>
