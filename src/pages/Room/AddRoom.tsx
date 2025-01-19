@@ -1,6 +1,9 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import AdminRoute from "../admin/AdminRoute";
 import { useCreateRoomMutation } from "../../redux/api/roomApi";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Add this line to include styles
+import { useNavigate } from "react-router-dom";
 
 interface Room {
   id: string;
@@ -9,14 +12,15 @@ interface Room {
   floorNo: number;
   capacity: number;
   pricePerSlot: number;
-  amenities: string[]; // Ensure amenities is an array of strings
-  imageLink: string; // Ensure imageLink is in your interface
+  amenities: string[];
+  imageLink: string;
 }
 
 const availableAmenities = ["Projector", "Whiteboard"];
 
 const AddRoom: React.FC = () => {
-  const [createRoom, { isLoading, error }] = useCreateRoomMutation(); // Using mutation hook from roomApi
+  const navigate = useNavigate();
+  const [createRoom, { isLoading, error }] = useCreateRoomMutation();
   const {
     register,
     handleSubmit,
@@ -26,19 +30,26 @@ const AddRoom: React.FC = () => {
     getValues,
   } = useForm<Room>({
     defaultValues: {
-      amenities: [], // Initialize amenities as an empty array
+      amenities: [],
     },
   });
 
   const onSubmit: SubmitHandler<Room> = async (data) => {
-    const room = { ...data, id: crypto.randomUUID() }; // Add random ID for the new room
+    const room = { ...data, id: crypto.randomUUID() };
 
     try {
       // Call the API to create the room
-      await createRoom(room).unwrap(); // unwrap to access the result directly
-      reset(); // Reset form after successful creation
+      await createRoom(room).unwrap();
+      reset();
+      // Show success toast
+      toast.success("Room created successfully!");
+      navigate(`/admin/dashboard`);
+      window.location.reload();
     } catch (err) {
-      console.error("Error creating room:", err); // Handle any error
+      console.error("Error creating room:", err);
+
+      // Show error toast
+      toast.error("Error creating room: Something went wrong!");
     }
   };
 
@@ -51,8 +62,8 @@ const AddRoom: React.FC = () => {
 
     // Update the amenities list based on the checkbox state
     const updatedAmenities = isChecked
-      ? [...currentAmenities, selectedAmenity] // Add if checked
-      : currentAmenities.filter((amenity) => amenity !== selectedAmenity); // Remove if unchecked
+      ? [...currentAmenities, selectedAmenity]
+      : currentAmenities.filter((amenity) => amenity !== selectedAmenity);
 
     // Set the updated amenities value using setValue
     setValue("amenities", updatedAmenities);
@@ -236,6 +247,9 @@ const AddRoom: React.FC = () => {
           </div>
         </form>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </AdminRoute>
   );
 };
