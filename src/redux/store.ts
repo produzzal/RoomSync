@@ -4,6 +4,7 @@ import signUpReducer from "./features/SignUpSlice";
 import loginReducer from "./features/SignUpSlice";
 import userReducer from "./features/UserSlice";
 import roomReducer from "./features/RoomSlice";
+import slotReducer from "./features/SlotSlice";
 import {
   FLUSH,
   PAUSE,
@@ -29,6 +30,7 @@ export const store = configureStore({
     login: loginReducer,
     user: persistedUserReducer,
     room: roomReducer,
+    slot: slotReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

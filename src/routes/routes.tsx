@@ -12,6 +12,7 @@ import UnAuthorized from "../pages/UnAuthorized";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import UpdateRoom from "../pages/Room/UpdateRoom";
 import MeetingRoom from "../pages/MeetingRoom";
+import AddSlot from "../pages/Slot/AddSlot";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <UpdateRoom />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/add-slot",
+        element: (
+          <AdminRoute>
+            <AddSlot />
           </AdminRoute>
         ),
       },
