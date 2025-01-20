@@ -63,11 +63,11 @@ const RoomList: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="text-center">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error loading rooms</div>;
+    return <div className="text-center">No Rooms Found</div>;
   }
 
   return (

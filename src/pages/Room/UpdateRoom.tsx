@@ -1,86 +1,99 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useForm, Controller } from "react-hook-form";
-import { setRoomData } from "../../redux/features/RoomSlice";
+import { ToastContainer, toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import {
   useGetRoomsQuery,
   useUpdateRoomMutation,
 } from "../../redux/api/roomApi";
 
-// Type for room data
 const UpdateRoom: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  // Redux: Get room data (in case it's already stored in Redux)
-  const roomData = useSelector((state: any) => state.room.roomData);
+  // Fetch the room data
+  const {
+    data: roomData,
+    error: fetchError,
+    isLoading: fetchingRoom,
+    refetch,
+  } = useGetRoomsQuery(); // Fetch room details
 
-  // API hook: Fetch room data by ID
-  const { data, error, isLoading } = useGetRoomsQuery(roomId!);
+  const rooms = roomData?.data || []; // Check if data is available and fall back to an empty array
+  const room = rooms.find((room) => room._id === roomId);
 
-  // Mutation hook for updating the room
-  const [updateRoom, { isLoading: isUpdating, error: updateError }] =
-    useUpdateRoomMutation();
+  // Mutation for updating the room
+  const [updateRoom, { isLoading: isUpdating }] = useUpdateRoomMutation();
 
-  // React Hook Form setup
-  const { control, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
     defaultValues: {
-      name: roomData?.name || "",
-      roomNo: roomData?.roomNo || "",
-      floorNo: roomData?.floorNo || "",
-      capacity: roomData?.capacity || "",
-      pricePerSlot: roomData?.pricePerSlot || "",
-      amenities: roomData?.amenities || [],
+      name: "",
+      roomNo: "",
+      floorNo: "",
+      capacity: "",
+      pricePerSlot: "",
     },
   });
 
-  // If data exists, populate the form fields directly using setValue
-  if (data) {
-    setValue("name", data.name);
-    setValue("roomNo", data.roomNo);
-    setValue("floorNo", data.floorNo);
-    setValue("capacity", data.capacity);
-    setValue("pricePerSlot", data.pricePerSlot);
-    dispatch(setRoomData(data)); // Save room data in Redux if needed
-  }
+  // On successful fetch, set default values in the form
+  useEffect(() => {
+    if (room) {
+      setValue("name", room.name || "");
+      setValue("roomNo", room.roomNo || "");
+      setValue("floorNo", room.floorNo || "");
+      setValue("capacity", room.capacity || "");
+      setValue("pricePerSlot", room.pricePerSlot || "");
+    }
+  }, [room, setValue]);
 
-  // Submit handler for the form
-  const onSubmit = (formData) => {
+  // Handle form submission
+  const onSubmit = (formData: any) => {
     const updatedRoom = {
-      id: roomId!,
+      id: roomId!, // The id retrieved from the URL
       name: formData.name,
-      roomNo: formData.roomNo ? Number(formData.roomNo) : undefined,
-      floorNo: formData.floorNo ? Number(formData.floorNo) : undefined,
-      capacity: formData.capacity ? Number(formData.capacity) : undefined,
-      pricePerSlot: formData.pricePerSlot
-        ? Number(formData.pricePerSlot)
-        : undefined,
-      amenities: formData.amenities,
-      isDeleted: formData.isDeleted,
+      roomNo: parseFloat(formData.roomNo),
+      floorNo: parseFloat(formData.floorNo),
+      capacity: parseFloat(formData.capacity),
+      pricePerSlot: parseFloat(formData.pricePerSlot),
     };
 
+    // Call the mutation to update the room
     updateRoom({ id: roomId!, data: updatedRoom })
       .unwrap()
       .then(() => {
-        navigate(`/admin/dashboard`);
-        window.location.reload();
+        toast.success("Room updated successfully!");
+        refetch(); // Refetch the updated room
+        navigate("/admin/dashboard?section=room"); // Navigate to the same section in dashboard
       })
       .catch((err) => {
         console.error("Error updating room:", err);
+        toast.error("Failed to update room!");
       });
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading room data: {error.message}</div>;
+  // Loading state while fetching the room data
+  if (fetchingRoom) {
+    return <div>Loading...</div>;
+  }
 
-  const errorMessage = updateError ? updateError.message : "";
+  // Error handling if fetching room data fails
+  if (fetchError) {
+    return <div>Error fetching room details</div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      {/* Toastify Container */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
       <h2 className="text-2xl font-semibold text-center mb-4">Update Room</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Name */}
         <div>
           <label
             htmlFor="name"
@@ -88,61 +101,53 @@ const UpdateRoom: React.FC = () => {
           >
             Room Name
           </label>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field }) => (
-              <input
-                {...field}
-                id="name"
-                className="input w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+          <input
+            type="text"
+            id="name"
+            {...register("name")}
+            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
           />
         </div>
 
+        {/* Room No. */}
         <div>
           <label
             htmlFor="roomNo"
             className="block text-sm font-medium text-gray-700"
           >
-            Room Number
+            Room No.
           </label>
-          <Controller
-            control={control}
-            name="roomNo"
-            render={({ field }) => (
-              <input
-                type="number"
-                {...field}
-                id="roomNo"
-                className="input w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+          <input
+            type="text"
+            id="roomNo"
+            {...register("roomNo")}
+            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
           />
+          {errors.roomNo && (
+            <p className="text-red-500 text-sm">{errors.roomNo.message}</p>
+          )}
         </div>
 
+        {/* Floor No. */}
         <div>
           <label
             htmlFor="floorNo"
             className="block text-sm font-medium text-gray-700"
           >
-            Floor Number
+            Floor No.
           </label>
-          <Controller
-            control={control}
-            name="floorNo"
-            render={({ field }) => (
-              <input
-                type="number"
-                {...field}
-                id="floorNo"
-                className="input w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+          <input
+            type="text"
+            id="floorNo"
+            {...register("floorNo")}
+            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
           />
+          {errors.floorNo && (
+            <p className="text-red-500 text-sm">{errors.floorNo.message}</p>
+          )}
         </div>
 
+        {/* Capacity */}
         <div>
           <label
             htmlFor="capacity"
@@ -150,56 +155,50 @@ const UpdateRoom: React.FC = () => {
           >
             Capacity
           </label>
-          <Controller
-            control={control}
-            name="capacity"
-            render={({ field }) => (
-              <input
-                type="number"
-                {...field}
-                id="capacity"
-                className="input w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+          <input
+            type="number"
+            id="capacity"
+            {...register("capacity")}
+            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
           />
+          {errors.capacity && (
+            <p className="text-red-500 text-sm">{errors.capacity.message}</p>
+          )}
         </div>
 
+        {/* PricePerSlot */}
         <div>
           <label
             htmlFor="pricePerSlot"
             className="block text-sm font-medium text-gray-700"
           >
-            Price per Slot
+            Price Per Slot
           </label>
-          <Controller
-            control={control}
-            name="pricePerSlot"
-            render={({ field }) => (
-              <input
-                type="number"
-                {...field}
-                id="pricePerSlot"
-                className="input w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            )}
+          <input
+            type="number"
+            id="pricePerSlot"
+            {...register("pricePerSlot")}
+            className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
           />
+          {errors.pricePerSlot && (
+            <p className="text-red-500 text-sm">
+              {errors.pricePerSlot.message}
+            </p>
+          )}
         </div>
 
-        <div>
-          <button
-            type="submit"
-            className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors w-full disabled:opacity-50"
-            disabled={isUpdating}
-          >
-            {isUpdating ? "Updating..." : "Update Room"}
-          </button>
-        </div>
-
-        {updateError && (
-          <div className="text-red-500 text-center mt-2">
-            Error updating room: {errorMessage || "Something went wrong!"}
-          </div>
-        )}
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isUpdating}
+          className={`mt-4 px-4 py-2 w-full ${
+            isUpdating
+              ? "bg-gray-300 text-gray-700"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          } font-semibold rounded-md`}
+        >
+          {isUpdating ? "Updating..." : "Update Room"}
+        </button>
       </form>
     </div>
   );

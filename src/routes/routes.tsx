@@ -13,6 +13,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import UpdateRoom from "../pages/Room/UpdateRoom";
 import MeetingRoom from "../pages/MeetingRoom";
 import AddSlot from "../pages/Slot/AddSlot";
+import UpdateSlot from "../pages/Slot/UpdateSlot";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AddSlot />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/update-slot/:slotId",
+        element: (
+          <AdminRoute>
+            <UpdateSlot />
           </AdminRoute>
         ),
       },

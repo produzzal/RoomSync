@@ -1,6 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useCreateSlotMutation } from "../../redux/api/slotApi";
+import {
+  useCreateSlotMutation,
+  useGetSlotsQuery,
+} from "../../redux/api/slotApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,6 +16,7 @@ interface IFormInputs {
 
 const AddSlot: React.FC = () => {
   const [createSlot, { isLoading, error }] = useCreateSlotMutation();
+  const { refetch } = useGetSlotsQuery();
   const {
     register,
     handleSubmit,
@@ -26,6 +30,7 @@ const AddSlot: React.FC = () => {
       reset();
       // unwrap to handle success or error
       toast.success("Slot successfully created!");
+      refetch();
     } catch (err) {
       toast.error("Error creating slot. Please try again.");
     }

@@ -4,14 +4,14 @@ export const roomApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createRoom: builder.mutation({
       query: (room) => ({
-        url: "/rooms", // The API endpoint for creating a room
+        url: "/rooms",
         method: "POST",
-        body: room, // Room data being sent
+        body: room,
       }),
     }),
     getRooms: builder.query({
       query: () => ({
-        url: "/rooms", // The API endpoint for fetching rooms
+        url: "/rooms",
         method: "GET",
       }),
     }),
