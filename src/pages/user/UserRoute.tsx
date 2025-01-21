@@ -7,17 +7,17 @@ interface AdminRouteProps {
   children: React.ReactNode;
 }
 
-const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
+const UserRoute: React.FC<AdminRouteProps> = ({ children }) => {
   const { token, user } = useAppSelector((state: RootState) => state.user);
   const isAuthenticated = !!token;
-  const isAdmin = user?.role === "admin"; // Check if user role is admin
+  const isUser = user?.role === "user"; // Check if user role is admin
 
   // If not authenticated or not an admin, redirect to unauthorized page
-  if (!isAuthenticated || !isAdmin) {
+  if (!isAuthenticated || !isUser) {
     return <Navigate to="/unauthorized" replace />;
   }
 
   return <>{children}</>;
 };
 
-export default AdminRoute;
+export default UserRoute;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { logout } from "../../redux/features/UserSlice";
 
 const Navbar: React.FC = () => {
@@ -55,17 +55,35 @@ const Navbar: React.FC = () => {
               className="menu menu-sm dropdown-content mt-3 z-[9999] bg-base-100 rounded-box w-52 p-2 shadow text-black sm:w-56 sm:max-w-[250px] md:w-[320px] lg:w-auto whitespace-normal"
               onClick={closeDropdown}
             >
+              {/* Added NavLink for active routes */}
               <li>
-                <a href="/">Home</a>
+                <NavLink to="/" activeClassName="bg-blue-200 text-white">
+                  Home
+                </NavLink>
               </li>
               <li>
-                <a href="/meeting-rooms">Meeting Rooms</a>
+                <NavLink
+                  to="/meeting-rooms"
+                  activeClassName="bg-blue-200 text-white"
+                >
+                  Meeting Rooms
+                </NavLink>
               </li>
               <li>
-                <a href="/about-us">About Us</a>
+                <NavLink
+                  to="/about-us"
+                  activeClassName="bg-blue-200 text-white"
+                >
+                  About Us
+                </NavLink>
               </li>
               <li>
-                <a href="/contact-us">Contact Us</a>
+                <NavLink
+                  to="/contact-us"
+                  activeClassName="bg-blue-200 text-white"
+                >
+                  Contact Us
+                </NavLink>
               </li>
             </ul>
           )}
@@ -78,17 +96,29 @@ const Navbar: React.FC = () => {
       {/* Navbar Center */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
+          {/* Added NavLink for active routes */}
           <li>
-            <a href="/">Home</a>
+            <NavLink to="/" activeClassName="bg-blue-200 text-white">
+              Home
+            </NavLink>
           </li>
           <li>
-            <a href="/meeting-rooms">Meeting Rooms</a>
+            <NavLink
+              to="/meeting-rooms"
+              activeClassName="bg-blue-500 text-white"
+            >
+              Meeting Rooms
+            </NavLink>
           </li>
           <li>
-            <a href="/about-us">About Us</a>
+            <NavLink to="/about-us" activeClassName="bg-blue-200 text-white">
+              About Us
+            </NavLink>
           </li>
           <li>
-            <a href="/contact-us">Contact Us</a>
+            <NavLink to="/contact-us" activeClassName="bg-blue-200 text-white">
+              Contact Us
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -118,7 +148,12 @@ const Navbar: React.FC = () => {
                 {isAdmin ? (
                   <>
                     <li>
-                      <Link to="/admin/dashboard">Dashboard</Link>
+                      <NavLink
+                        to="/admin/dashboard?section=room"
+                        activeClassName="bg-blue-500 text-white"
+                      >
+                        Dashboard
+                      </NavLink>
                     </li>
                     <li>
                       <a onClick={handleLogout}>Logout</a>
@@ -127,7 +162,12 @@ const Navbar: React.FC = () => {
                 ) : (
                   <>
                     <li>
-                      <Link to="/my-bookings">My Bookings</Link>
+                      <NavLink
+                        to="/my-bookings"
+                        activeClassName="bg-blue-500 text-white"
+                      >
+                        My Bookings
+                      </NavLink>
                     </li>
                     <li>
                       <a onClick={handleLogout}>Logout</a>

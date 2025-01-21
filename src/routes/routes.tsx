@@ -14,6 +14,8 @@ import UpdateRoom from "../pages/Room/UpdateRoom";
 import MeetingRoom from "../pages/MeetingRoom";
 import AddSlot from "../pages/Slot/AddSlot";
 import UpdateSlot from "../pages/Slot/UpdateSlot";
+import UserRoute from "../pages/user/UserRoute";
+import RoomDetails from "../pages/Room/RoomDetails";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +92,14 @@ const router = createBrowserRouter([
           <AdminRoute>
             <AdminDashboard />
           </AdminRoute>
+        ),
+      },
+      {
+        path: "room-details/:roomId",
+        element: (
+          <UserRoute>
+            <RoomDetails />
+          </UserRoute>
         ),
       },
     ],

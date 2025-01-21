@@ -18,8 +18,6 @@ const MeetingRoom: React.FC = () => {
   const { data: response, error, isLoading } = useGetRoomsQuery();
   const rooms = response?.data || [];
 
-  console.log("Rooms Data:", rooms); // Log the fetched rooms data
-
   // Filter rooms based on search query, capacity, and price (Only when filters are set)
   const filteredRooms = rooms.filter((room) => {
     const roomName = room?.name ? room.name.toLowerCase() : "";
@@ -47,8 +45,6 @@ const MeetingRoom: React.FC = () => {
     return matchesSearch && matchesCapacity && matchesPrice;
   });
 
-  console.log("Filtered Rooms:", filteredRooms); // Log filtered rooms
-
   // Sort rooms based on the sort order
   const sortedRooms = filteredRooms.sort((a, b) => {
     const priceA = a.pricePerSlot || 0;
@@ -59,8 +55,6 @@ const MeetingRoom: React.FC = () => {
       return priceB - priceA;
     }
   });
-
-  console.log("Sorted Rooms:", sortedRooms); // Log sorted rooms
 
   if (isLoading) return <p>Loading rooms...</p>;
   if (error) return <p>Error fetching rooms.</p>;
@@ -148,13 +142,11 @@ const MeetingRoom: React.FC = () => {
             sortedRooms.map((room) => (
               <RoomCard
                 key={room._id}
+                id={room._id}
                 image={room.imageLink}
                 name={room.name}
                 capacity={room.capacity}
                 pricePerSlot={room.pricePerSlot}
-                onSeeDetails={() =>
-                  console.log(`See details for room ${room._id}`)
-                }
               />
             ))
           ) : (

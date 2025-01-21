@@ -37,9 +37,9 @@ const FeaturedRooms: React.FC = () => {
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {displayedRooms.map((room) => (
           <RoomCard
-            key={room.id}
-            id={room.id}
-            imageUrl={room.imageUrl}
+            key={room._id}
+            id={room._id}
+            image={room.imageLink}
             name={room.name}
             capacity={room.capacity}
             pricePerSlot={room.pricePerSlot}

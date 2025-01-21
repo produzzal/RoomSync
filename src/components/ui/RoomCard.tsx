@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface RoomCardProps {
+  id: string;
   image: string;
   name: string;
   capacity: number;
@@ -10,11 +11,13 @@ interface RoomCardProps {
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({
+  id,
   image,
   name,
   capacity,
   pricePerSlot,
 }) => {
+  const navigate = useNavigate();
   return (
     <motion.div
       className="bg-white border rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:scale-102"
@@ -51,11 +54,12 @@ const RoomCard: React.FC<RoomCardProps> = ({
         </p>
 
         {/* See Details Button */}
+        {/* See Details Button */}
         <motion.button
           className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => (window.location.href = "")}
+          onClick={() => navigate(`/room-details/${id}`)} // Navigate to details page
         >
           See Details
         </motion.button>
