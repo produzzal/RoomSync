@@ -16,6 +16,8 @@ import AddSlot from "../pages/Slot/AddSlot";
 import UpdateSlot from "../pages/Slot/UpdateSlot";
 import UserRoute from "../pages/user/UserRoute";
 import RoomDetails from "../pages/Room/RoomDetails";
+import CreateBooking from "../pages/Booking/CreateBooking";
+import Users from "../pages/Booking/check";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +101,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <RoomDetails />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "booking/:roomId",
+        element: (
+          <UserRoute>
+            <CreateBooking />
           </UserRoute>
         ),
       },

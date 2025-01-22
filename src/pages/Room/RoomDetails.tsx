@@ -153,7 +153,7 @@ const RoomDetails = () => {
         className="px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => (window.location.href = "/")}
+        onClick={() => (window.location.href = `/booking/${roomId}`)}
       >
         Book Now
       </motion.button>

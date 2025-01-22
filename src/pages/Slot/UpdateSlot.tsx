@@ -17,13 +17,10 @@ const UpdateSlot: React.FC = () => {
     error: fetchError,
     isLoading: fetchingSlot,
     refetch,
-  } = useGetSlotsQuery(); // Fetch slot details
-  console.log(slotData);
+  } = useGetSlotsQuery();
 
   const slots = slotData?.data || []; // Check if data is available and fall back to an empty array
   const slot = slots.find((slot) => slot._id === slotId);
-
-  console.log("2", slot?.date);
 
   // Mutation for updating the slot
   const [updateSlot, { isLoading: isUpdating }] = useUpdateSlotMutation();
