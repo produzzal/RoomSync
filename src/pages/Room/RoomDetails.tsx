@@ -137,7 +137,7 @@ const RoomDetails = () => {
           </li>
           <li className="flex justify-between">
             <span className="font-semibold text-gray-800">Price Per Slot:</span>{" "}
-            <span className="text-gray-600">${roomData.pricePerSlot}</span>
+            <span className="text-gray-600">{roomData.pricePerSlot} BDT</span>
           </li>
           <li className="flex justify-between">
             <span className="font-semibold text-gray-800">Amenities:</span>{" "}

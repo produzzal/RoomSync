@@ -109,17 +109,24 @@ const CreateBooking = () => {
 
     console.log("bookingData", bookingData);
 
-    createBooking(bookingData)
-      .unwrap()
-      .then(() => {
-        toast.success("Booking created successfully!");
-        refetch();
-        reset();
-      })
-      .catch((error) => {
+    const handleBooking = async () => {
+      try {
+        const res = await createBooking(bookingData).unwrap(); // Await the promise
+        console.log(res);
+        if (res) {
+          window.location.href = res.data.paymentInfo.payment_url;
+          refetch();
+          reset();
+        } else {
+          toast.error("Unexpected error occurred during booking.");
+        }
+      } catch (error) {
         console.error("Booking creation failed:", error);
         toast.error(error.message || "Booking creation failed");
-      });
+      }
+    };
+
+    handleBooking();
   };
 
   return (
@@ -242,7 +249,7 @@ const CreateBooking = () => {
                 className="w-full px-8 py-3 bg-[#005FA8] text-white font-semibold rounded-lg shadow-md hover:bg-[#002766] transition-colors"
                 disabled={isBookingLoading}
               >
-                {isBookingLoading ? "Booking..." : "Submit"}
+                {isBookingLoading ? "processing..." : "Proceed to Payment"}
               </button>
             </div>
           )}

@@ -50,7 +50,7 @@ const RoomCard: React.FC<RoomCardProps> = ({
 
         {/* Price Per Slot */}
         <p className="text-lg md:text-xl font-semibold text-gray-700">
-          PricePerSlot: ${pricePerSlot}
+          PricePerSlot: {pricePerSlot} BDT
         </p>
 
         {/* See Details Button */}
